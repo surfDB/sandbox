@@ -1,18 +1,19 @@
-import '../styles/globals.css';
-import '@rainbow-me/rainbowkit/styles.css';
-import type { AppProps } from 'next/app';
+import "../styles/globals.css";
+import "@rainbow-me/rainbowkit/styles.css";
+import type { AppProps } from "next/app";
 import {
   RainbowKitProvider,
   getDefaultWallets,
   createAuthenticationAdapter,
   RainbowKitAuthenticationProvider,
   darkTheme,
-} from '@rainbow-me/rainbowkit';
-import { chain, configureChains, createClient, WagmiConfig } from 'wagmi';
-import { alchemyProvider } from 'wagmi/providers/alchemy';
-import { publicProvider } from 'wagmi/providers/public';
-import { useEffect, useState } from 'react';
-import { SiweMessage } from 'siwe';
+} from "@rainbow-me/rainbowkit";
+import { chain, configureChains, createClient, WagmiConfig } from "wagmi";
+import { alchemyProvider } from "wagmi/providers/alchemy";
+import { publicProvider } from "wagmi/providers/public";
+import { useEffect, useState } from "react";
+import { SiweMessage } from "siwe";
+import { atom, useAtom } from "jotai";
 
 const { chains, provider, webSocketProvider } = configureChains(
   [
@@ -20,7 +21,7 @@ const { chains, provider, webSocketProvider } = configureChains(
     chain.polygon,
     chain.optimism,
     chain.arbitrum,
-    ...(process.env.NEXT_PUBLIC_ENABLE_TESTNETS === 'true'
+    ...(process.env.NEXT_PUBLIC_ENABLE_TESTNETS === "true"
       ? [chain.goerli, chain.kovan, chain.rinkeby, chain.ropsten]
       : []),
   ],
@@ -28,14 +29,14 @@ const { chains, provider, webSocketProvider } = configureChains(
     alchemyProvider({
       // This is Alchemy's default API key.
       // You can get your own at https://dashboard.alchemyapi.io
-      apiKey: '_gg7wSSi0KMBsdKnGVfHDueq6xMB9EkC',
+      apiKey: "_gg7wSSi0KMBsdKnGVfHDueq6xMB9EkC",
     }),
     publicProvider(),
   ]
 );
 
 const { connectors } = getDefaultWallets({
-  appName: 'RainbowKit App',
+  appName: "RainbowKit App",
   chains,
 });
 
@@ -46,16 +47,20 @@ const wagmiClient = createClient({
   webSocketProvider,
 });
 
+export const hostAtom = atom("http://139.59.14.97:3000");
+
 function MyApp({ Component, pageProps }: AppProps) {
   const [authenticationStatus, setAuthenticationStatus] = useState<
-    'loading' | 'authenticated' | 'unauthenticated'
-  >('loading');
+    "loading" | "authenticated" | "unauthenticated"
+  >("loading");
 
   const [user, setUser] = useState(null);
 
+  const [host, setHost] = useAtom(hostAtom);
+
   const authenticationAdapter = createAuthenticationAdapter({
     getNonce: async () => {
-      const response = await fetch('/api/auth/nonce');
+      const response = await fetch(`/api/auth/nonce?host=${host}`);
       const res = await response.json();
       return res;
     },
@@ -63,9 +68,9 @@ function MyApp({ Component, pageProps }: AppProps) {
       return new SiweMessage({
         domain: window.location.host,
         address,
-        statement: 'Sign in with Ethereum to the app.',
+        statement: "Sign in with Ethereum to the app.",
         uri: window.location.origin,
-        version: '1',
+        version: "1",
         chainId,
         nonce,
       });
@@ -75,9 +80,9 @@ function MyApp({ Component, pageProps }: AppProps) {
     },
     verify: async ({ message, signature }) => {
       console.log({ signature });
-      const verifyRes = await fetch('/api/auth/verify', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const verifyRes = await fetch(`/api/auth/verify?host=${host}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           authSig: {
             message,
@@ -88,25 +93,25 @@ function MyApp({ Component, pageProps }: AppProps) {
       });
       console.log({ verifyRes });
       setAuthenticationStatus(
-        verifyRes.ok ? 'authenticated' : 'unauthenticated'
+        verifyRes.ok ? "authenticated" : "unauthenticated"
       );
       return Boolean(verifyRes.ok);
     },
     signOut: async () => {
-      await fetch('/api/auth/logout', {
-        method: 'POST',
+      await fetch(`/api/auth/logout?host=${host}`, {
+        method: "POST",
       });
-      setAuthenticationStatus('unauthenticated');
+      setAuthenticationStatus("unauthenticated");
     },
   });
 
   useEffect(() => {
     (async () => {
-      const res = await fetch('/api/auth/me');
+      const res = await fetch(`/api/auth/me?host=${host}`);
       const user = await res.json();
       console.log({ user });
       setAuthenticationStatus(
-        user.address ? 'authenticated' : 'unauthenticated'
+        user.address ? "authenticated" : "unauthenticated"
       );
     })();
   }, []);
