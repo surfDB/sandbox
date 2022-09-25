@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@rainbow-me/rainbowkit": "0.6.1",
-    "@surfdb/client-sdk": "0.1.1",
+    "@surfdb/client-sdk": "^0.2.0",
     "ethers": "5.7.1",
     "jotai": "^1.8.4",
     "next": "12.3.1",

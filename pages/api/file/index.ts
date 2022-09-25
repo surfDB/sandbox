@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import fs from "fs";
 import formidable, { File } from "formidable";
-import { SurfClient } from "@/../surfdb/dist/packages/client-sdk/src";
+import { SurfClient } from "@surfdb/client-sdk";
 
 export const config = {
   api: {

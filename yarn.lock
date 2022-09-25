@@ -861,13 +861,14 @@
   resolved "https://registry.yarnpkg.com/@stablelib/wipe/-/wipe-1.0.1.tgz#d21401f1d59ade56a62e139462a97f104ed19a36"
   integrity sha512-WfqfX/eXGiAd3RJe4VU2snh/ZPwtSjLG4ynQ/vYzvghTh7dHFcI1wl+nrkWG6lGhukOxOsUHfv8dUXr58D0ayg==
 
-"@surfdb/client-sdk@0.1.1":
-  version "0.1.1"
-  resolved "https://registry.yarnpkg.com/@surfdb/client-sdk/-/client-sdk-0.1.1.tgz#e579a2c0cbc2d86aa93334b1a8498dbe078b0aca"
-  integrity sha512-zX1QGQwPEyEpe13yd+VHzF/hMOnRkZ8JYaLUL9rvigbJzQsKSbSKvRneQn6NgINTSy9LGgADlHV7ExUbVh6L6g==
+"@surfdb/client-sdk@^0.2.0":
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/@surfdb/client-sdk/-/client-sdk-0.2.0.tgz#456d3da47bf65c655867e163cd9e7f5a817a9e6b"
+  integrity sha512-OT9Nr6Vmc9x+xR9Zz+oDsF6LfzM1NZddU6NNpQqmds8Pw/vtb81IAwVkV+MPNxvGGc8pHdWZ+5D1cpPDiMTT+Q==
   dependencies:
     axios "^0.27.2"
     cookie "^0.5.0"
+    form-data "^4.0.0"
     socket.io-client "^4.5.2"
     tslib "^2.3.0"
 
