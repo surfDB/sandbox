@@ -14,7 +14,7 @@ export default async function handler(
     case "POST":
       res.status(200).json(
         await surfClient.create(req, res, {
-          schema: "test",
+          schema: req.query.schema as string,
           data: req.body,
         })
       );
@@ -22,7 +22,7 @@ export default async function handler(
     case "PATCH":
       res.status(200).json(
         await surfClient.update(req, res, {
-          schema: "test",
+          schema: req.query.schema as string,
           data: req.body,
           id: req.query.id as string,
         })
@@ -31,7 +31,7 @@ export default async function handler(
     case "GET":
       res.status(200).json(
         (await surfClient.getAll(req, res, {
-          schema: "test",
+          schema: req.query.schema as string,
         })) as any
       );
       break;

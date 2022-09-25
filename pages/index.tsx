@@ -1,5 +1,6 @@
 import { dummyData, dummyResponse } from "@/utils/contants";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
+import { File } from "formidable";
 import { useAtom } from "jotai";
 import type { NextPage } from "next";
 import Image from "next/image";
@@ -26,6 +27,8 @@ const Home: NextPage = () => {
     accessAddress: address,
   });
 
+  const [inputFile, setInputFile] = useState<any>(null);
+
   const [getResponse, setGetResponse] = useState();
   const [postResponse, setPostResponse] = useState();
   const [putResponse, setPutResponse] = useState();
@@ -37,6 +40,7 @@ const Home: NextPage = () => {
   const [getTime, setGetTime] = useState(0);
   const [postTime, setPostTime] = useState(0);
   const [putTime, setPutTime] = useState(0);
+  const [fileTime, setFileTime] = useState(0);
 
   useEffect(() => {
     setData({
@@ -199,13 +203,35 @@ const Home: NextPage = () => {
         <hr />
         <h2>Upload file 📄</h2>
         <p>Upload files to dedicated IPFS node</p>
-        <input type="file" />
+        <input
+          type="file"
+          onChange={async (e) => {
+            let start = performance.now();
+            const file = e.target.files && e.target.files[0];
+            const formData = new FormData();
+            console.log({ file });
+            formData.append("file", file as any);
+            const res = await (
+              await fetch(`/api/file?host=${host}`, {
+                method: "POST",
+                body: formData,
+              })
+            ).json();
+            console.log({ res });
+            setFileResponse(res);
+            let end = performance.now();
+            setFileTime(end - start);
+          }}
+        />
         <h3>Response</h3>
         <textarea
           className="json"
           disabled
           value={JSON.stringify(fileResponse, null, 2)}
         />
+        <div className="time">
+          <p>{fileTime.toFixed(1)} ms</p>
+        </div>
       </div>
     </Container>
   );

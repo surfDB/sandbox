@@ -47,7 +47,7 @@ const wagmiClient = createClient({
   webSocketProvider,
 });
 
-export const hostAtom = atom("http://139.59.14.97:3000");
+export const hostAtom = atom("http://139.59.63.194:3000");
 
 function MyApp({ Component, pageProps }: AppProps) {
   const [authenticationStatus, setAuthenticationStatus] = useState<
@@ -107,12 +107,17 @@ function MyApp({ Component, pageProps }: AppProps) {
 
   useEffect(() => {
     (async () => {
-      const res = await fetch(`/api/auth/me?host=${host}`);
-      const user = await res.json();
-      console.log({ user });
-      setAuthenticationStatus(
-        user.address ? "authenticated" : "unauthenticated"
-      );
+      try {
+        const res = await fetch(`/api/auth/me?host=${host}`);
+        const user = await res.json();
+        console.log({ user });
+        setAuthenticationStatus(
+          user.address ? "authenticated" : "unauthenticated"
+        );
+      } catch (e) {
+        console.log(e);
+        setAuthenticationStatus("unauthenticated");
+      }
     })();
   }, []);
 
