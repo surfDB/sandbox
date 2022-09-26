@@ -76,7 +76,11 @@ const Home: NextPage = () => {
           operations
         </p>
         <div className="row">
-          <input value={host} onChange={(e) => setHost(e.target.value)} />
+          <input
+            value={host}
+            onChange={(e) => setHost(e.target.value)}
+            disabled
+          />
           <ConnectButton chainStatus="icon" accountStatus="avatar" />
         </div>
 
@@ -88,6 +92,7 @@ const Home: NextPage = () => {
           <input value={schema} onChange={(e) => setSchema(e.target.value)} />
           <button
             onClick={async () => {
+              if (!address) return alert("Please authenticate first");
               let start = performance.now();
               const res = await (
                 await fetch(`/api/data?schema=${schema}&host=${host}`, {
@@ -163,6 +168,7 @@ const Home: NextPage = () => {
           <input value={docId} onChange={(e) => setDocId(e.target.value)} />
           <button
             onClick={async () => {
+              if (!address) return alert("Please authenticate first");
               let start = performance.now();
               const res = await (
                 await fetch(
@@ -206,6 +212,7 @@ const Home: NextPage = () => {
         <input
           type="file"
           onChange={async (e) => {
+            if (!address) return alert("Please authenticate first");
             let start = performance.now();
             const file = e.target.files && e.target.files[0];
             const formData = new FormData();
@@ -242,6 +249,12 @@ const Container = styled.div`
   display: flex;
   flex-direction: row;
 
+  @media (max-width: 768px) {
+    flex-direction: column;
+    overflow: auto;
+    height: auto;
+  }
+
   p {
     padding: 0;
     margin: 0.4rem 0;
@@ -257,6 +270,10 @@ const Container = styled.div`
     height: 100%;
     padding-bottom: 100px;
 
+    @media (max-width: 768px) {
+      width: 100%;
+    }
+
     p {
       color: #fff;
       font-weight: 600;
@@ -269,8 +286,11 @@ const Container = styled.div`
     background: #000;
     width: 50%;
     padding: 3.5rem;
-    height: 100vh;
     overflow: auto;
+
+    @media (max-width: 768px) {
+      width: 100%;
+    }
 
     &::-webkit-scrollbar {
       display: none;
@@ -334,6 +354,10 @@ const Container = styled.div`
       &:focus {
         outline: none;
         border: 2px solid #00fb94;
+      }
+
+      &[disabled] {
+        background: #ddd;
       }
     }
 
