@@ -1,11 +1,9 @@
 import { dummyData, dummyResponse } from "@/utils/contants";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
-import { File } from "formidable";
 import { useAtom } from "jotai";
 import type { NextPage } from "next";
 import Image from "next/image";
 import { useEffect, useState } from "react";
-
 import styled from "styled-components";
 import { useAccount } from "wagmi";
 import { hostAtom } from "./_app";
@@ -58,6 +56,19 @@ const Home: NextPage = () => {
       <div className="banner">
         <Image src="/surfLogo.svg" height="300" width="1000" />
         <p>Database made for dapps</p>
+        <div className="row">
+          <div>
+            <a href="https://docs.surfdb.xyz" target="_blank">
+              <div className="fa fa-book icon" />
+            </a>
+            <a href="https://discord.gg/NVeQbMcf6W" target="_blank">
+              <div className="fa fa-users icon" />
+            </a>
+            <a href="https://twitter.com/surfdbxyz" target="_blank">
+              <div className="fa fa-twitter icon" />
+            </a>
+          </div>
+        </div>
       </div>
       <div className="dashboard">
         <h1>Let's go surfing 🏄</h1>
@@ -258,6 +269,20 @@ const Container = styled.div`
   p {
     padding: 0;
     margin: 0.4rem 0;
+  }
+
+  .icon {
+    color: #fff;
+    font-size: 22px;
+    cursor: pointer;
+    margin-right: 2rem;
+    margin-top: 1rem;
+
+    transition: all 0.2s ease-in-out;
+
+    &:hover {
+      color: #aaa;
+    }
   }
 
   .banner {
